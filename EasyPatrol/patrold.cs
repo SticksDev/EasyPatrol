@@ -16,6 +16,7 @@ namespace EasyPatrol
         {
             public bool isReady { get; set; }
             public bool isNewProfile { get; set; }
+            public object profile { get; set; }
         }
         
         public event EventHandler<patroldReadyEventArgs> patroldReady;
@@ -39,7 +40,7 @@ namespace EasyPatrol
             else
             {
                 // If it doesn't, create a new one
-                log.Info("Profile not found, creating new...");
+                log.Warn("Profile not found, creating new...");
 
                 // Create the folder in %appdata%/EasyPatrol/ if it does not already exist
                 if (!System.IO.Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\"))
@@ -51,7 +52,7 @@ namespace EasyPatrol
                 System.IO.File.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json").Close();
 
                 // Write the default profile to the file
-                System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json", JsonConvert.SerializeObject(new Profile("LSPD", "0", "0", "0", "EST")));
+                System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json", JsonConvert.SerializeObject(new Profile("LSPD", "notset", "notset", "notset", "EST")));
 
                 log.Info("Profile created successfully.");
 
@@ -61,7 +62,28 @@ namespace EasyPatrol
             }
 
             // Emit the ready event with isReady = true.
-            patroldReady?.Invoke(this, new patroldReadyEventArgs() { isReady = true, isNewProfile = isNewProfile });
+            patroldReady?.Invoke(this, new patroldReadyEventArgs() { isReady = true, isNewProfile = isNewProfile, profile = profile });
+        }
+
+        public object getCurrentProfile()
+        {
+            // Get the current profile and return it
+            return profile;
+        }
+
+        public void editCurrentProfile(object profile)
+        {
+            // Convert the object to a profile
+            Profile newProfile = (Profile)profile;
+
+            // First, delete the old profile
+            System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json");
+
+            // Then, write the new profile to the file
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json", JsonConvert.SerializeObject(newProfile));
+
+            // Finally, load the new profile
+            this.profile = JsonConvert.DeserializeObject<Profile>(System.IO.File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json"));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace EasyPatrol
 {
-    partial class Form1
+    partial class welcomeScreen
     {
         /// <summary>
         /// Required designer variable.
@@ -34,7 +34,7 @@ namespace EasyPatrol
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.startPatrolBttn = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.editProfileBttn = new System.Windows.Forms.Button();
             this.fiveMState = new System.Windows.Forms.Label();
             this.tsState = new System.Windows.Forms.Label();
             this.profileState = new System.Windows.Forms.Label();
@@ -86,15 +86,17 @@ namespace EasyPatrol
             this.startPatrolBttn.TabIndex = 4;
             this.startPatrolBttn.Text = "Start Patrol...";
             this.startPatrolBttn.UseVisualStyleBackColor = true;
+            this.startPatrolBttn.Click += new System.EventHandler(this.startPatrolBttn_Click);
             // 
-            // button2
+            // editProfileBttn
             // 
-            this.button2.Location = new System.Drawing.Point(713, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Edit Profile";
-            this.button2.UseVisualStyleBackColor = true;
+            this.editProfileBttn.Location = new System.Drawing.Point(713, 3);
+            this.editProfileBttn.Name = "editProfileBttn";
+            this.editProfileBttn.Size = new System.Drawing.Size(75, 23);
+            this.editProfileBttn.TabIndex = 5;
+            this.editProfileBttn.Text = "Edit Profile";
+            this.editProfileBttn.UseVisualStyleBackColor = true;
+            this.editProfileBttn.Click += new System.EventHandler(this.editProfileBttn_Click);
             // 
             // fiveMState
             // 
@@ -123,7 +125,7 @@ namespace EasyPatrol
             this.profileState.TabIndex = 8;
             this.profileState.Text = "Profile Status: Loading...";
             // 
-            // Form1
+            // welcomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -131,13 +133,13 @@ namespace EasyPatrol
             this.Controls.Add(this.profileState);
             this.Controls.Add(this.tsState);
             this.Controls.Add(this.fiveMState);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.editProfileBttn);
             this.Controls.Add(this.startPatrolBttn);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Form1";
+            this.Name = "welcomeScreen";
             this.Text = "Easy Patrol - Welcome!";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
@@ -153,7 +155,7 @@ namespace EasyPatrol
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button startPatrolBttn;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button editProfileBttn;
         private System.Windows.Forms.Label fiveMState;
         private System.Windows.Forms.Label tsState;
         private System.Windows.Forms.Label profileState;

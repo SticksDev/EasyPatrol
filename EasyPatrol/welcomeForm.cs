@@ -1,34 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EasyPatrol
 {
-    public partial class Form1 : Form
+    public partial class welcomeScreen : Form
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
-        public Form1()
+        private bool isDefaultProfile;
+        private Profile profile;
+        private string tsclient = "";
+
+        public welcomeScreen()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            log.Info("Form1_Load");
+            log.Info("EasyPatrol GUI Initializing");
         }
 
         // On form ready 
         private void Form1_Shown(Object sender, EventArgs e)
         {
-            log.Info("Form1_Shown");
+            log.Info("EasyPatrol GUI Ready. Invoking patrold");
             // Create an instance of patrold
             patrold patrold = new patrold();
 
@@ -37,7 +34,6 @@ namespace EasyPatrol
 
             // Init patrold
             patrold.initialize();
-
         }
 
         private void startProcessChecker()
@@ -51,22 +47,6 @@ namespace EasyPatrol
 
             // Every 30 seconds
             timer.Interval = 1000;
-
-            // tsclient is the process we are looking for
-            // has 32 bit and 64 bit versions
-            // Check OS bit
-
-            string tsclient = "";
-            
-            if(Environment.Is64BitOperatingSystem)
-            {
-                tsclient = "ts3client_win64";
-            }
-            else
-            {
-                tsclient = "ts3client_win32";
-            }
-
 
             timer.Tick += (sender, e) =>
                 {
@@ -115,17 +95,51 @@ namespace EasyPatrol
         private void patrold_patroldReady(object sender, patrold.patroldReadyEventArgs e)
         {
             // Write the event args 
-            log.Info("PatrolD is now ready. Current Client Info:");
-            
-            if(e.isNewProfile) {
+            log.Info("patrold 1.0 ready");
+
+            // Check if the current loaded profile has the default profile
+            // Bool is isDefaultProfile, use bool function to find if it is the default profile
+
+            // Load profile into the Profile const
+            profile = (Profile)e.profile;
+
+            // tsclient is the process we are looking for
+            // has 32 bit and 64 bit versions - so get the system architecture
+            // Then the respective name of the teamspeak client
+
+            if (Environment.Is64BitOperatingSystem)
+            {
+                tsclient = "ts3client_win64";
+            }
+            else
+            {
+                tsclient = "ts3client_win32";
+            }
+
+
+
+            if (profile.UnitNumber == "notset" & profile.Name == "notset")
+            {
+                // Profile is not set
+                isDefaultProfile = true;
+            }
+            else
+            {
+                // Profile is set
+                isDefaultProfile = false;
+            }
+
+            if (e.isNewProfile | isDefaultProfile) { 
                 // Show messageBox saying that its a new profile and needs to be configured
                 // MsgBox should be type warning
-                MessageBox.Show("New Profile Detected. Please ensure you add your details in before starting patrol.", "New Profile Detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("New Profile Detected or Default Profile Detected. Please ensure you add your details in before starting patrol.", "New Profile Detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 // Set the profileState to needs editing
                 // Text: Profile Status: (COLOR RED) Needs Editing
                 profileState.Text = "Profile Status: Needs Editing";
                 profileState.ForeColor = Color.Red;
+
+                isDefaultProfile = true;
             } else {
                 // Set the profileState to ready
                 // Text: Profile Status: (COLOR GREEN) Ready
@@ -136,7 +150,7 @@ namespace EasyPatrol
             // Check if fiveM.exe and TeamSpeak 3 process is running
 
             Process[] fiveMProcesses = Process.GetProcessesByName("fivem");
-            Process[] ts3Processes = Process.GetProcessesByName("TeamSpeak 3");
+            Process[] ts3Processes = Process.GetProcessesByName(tsclient);
 
             // Check if fiveMProcesses is running
             if (fiveMProcesses.Length > 0)
@@ -171,8 +185,79 @@ namespace EasyPatrol
             }
 
             // Start the process checker
-            startProcessChecker();
+            // startProcessChecker();
 
+        }
+
+        private void startPatrolBttn_Click(object sender, EventArgs e)
+        {
+            // Check if there profile has been marked as default
+            // If not, show messagebox saying that the profile needs to be configured
+
+            if(isDefaultProfile)
+            {
+                // Show messagebox saying that the profile needs to be configured
+                MessageBox.Show("Please ensure you have configured your profile before starting patrol.", "Profile Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void editProfileBttn_Click(object sender, EventArgs e)
+        {
+            // Load the profileForm
+            profileForm profileForm = new profileForm();
+
+            // Show the profileForm
+            profileForm.Show();
+
+            // Disable the editProfile button and start patrol button
+            editProfileBttn.Enabled = false;
+            startPatrolBttn.Enabled = false;
+            
+            // On profile edit
+            profileForm.profileEdited += profileForm_profileEdited;
+
+            // On form close
+            profileForm.FormClosed += profileForm_FormClosed;
+        }
+
+        private void profileForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Re enable buttons
+            editProfileBttn.Enabled = true;
+            startPatrolBttn.Enabled = true;
+        }
+
+        private void profileForm_profileEdited(object sender, profileForm.profileEditedEventArgs e)
+        {
+            // Set the profile to the new profile
+            profile = (Profile)e.newProfile;
+
+            // Re enable buttons
+            editProfileBttn.Enabled = true;
+            startPatrolBttn.Enabled = true;
+
+            // Check the profile to ensure it has the correct details
+            if (profile.UnitNumber != "notset" & profile.Name != "notset")
+            {
+                // Profile is set
+                isDefaultProfile = false;
+
+                // Set profile state to ready
+                // Text: Profile Status: (COLOR GREEN) Ready
+                profileState.Text = "Profile Status: Ready";
+                profileState.ForeColor = Color.Green;
+
+                // MsgBox Showing that the profile has been configured
+                // INFO
+                MessageBox.Show("Your profile is now ready to use.", "Profile Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+
+                // MsgBox Showing that the profile has NOT been configured
+                // Error
+                MessageBox.Show("You are still missing the required values (Name, Unit No). Please edit and add those.", "Profile Vaildation Errors", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
