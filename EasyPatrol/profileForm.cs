@@ -16,12 +16,12 @@ namespace EasyPatrol
         {
             public object newProfile { get; set; }
         }
-        
+
         public profileForm()
         {
             InitializeComponent();
         }
-        
+
         public void editCurrentProfile()
         {
             // First, delete the old profile

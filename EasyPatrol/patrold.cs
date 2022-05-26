@@ -18,10 +18,10 @@ namespace EasyPatrol
             public bool isNewProfile { get; set; }
             public object profile { get; set; }
         }
-        
+
         public event EventHandler<patroldReadyEventArgs> patroldReady;
         public bool isNewProfile;
-        
+
         public void initialize()
         {
             // Log that we are starting up
@@ -67,7 +67,7 @@ namespace EasyPatrol
 
         public void startFillerProcess(string department, object patroldata)
         {
-            
+
         }
-   }
+    }
 }

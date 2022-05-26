@@ -12,7 +12,7 @@ namespace EasyPatrol
         {
             InitializeComponent();
         }
-        
+
         private DateTime startDate;
         private DateTime endDate;
         private Profile profile;
@@ -49,7 +49,7 @@ namespace EasyPatrol
             aTimer.Start();
         }
 
-       private void loadProfileInfo()
+        private void loadProfileInfo()
         {
             // Load the profile from the profile.json in %appdata%
             profile = JsonConvert.DeserializeObject<Profile>(System.IO.File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json"));
@@ -80,8 +80,8 @@ namespace EasyPatrol
         }
 
         private void enableRideAlongSettings_CheckedChanged(object sender, EventArgs e)
-        { 
-            if(enableRideAlongSettings.Checked)
+        {
+            if (enableRideAlongSettings.Checked)
             {
                 // Enable the ride along settings
                 rideAlongUnitIdentText.Visible = true;
@@ -98,33 +98,51 @@ namespace EasyPatrol
                 unitRideAlongWebID.Visible = false;
             }
         }
-        
+
         private void startAndPause_Click(object sender, EventArgs e)
         {
-            if(serverChooserBox.SelectedItem == null)
+            if (serverChooserBox.SelectedItem == null)
             {
                 // Show an error message saying that a server must be selected.
                 MessageBox.Show("Please select a server to patrol.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (startDate.ToString() != null & endDate.ToString() != null)
-            {
-                // Warn them that this will overwrite the current saved data.
-                DialogResult result = MessageBox.Show("This will overwrite the current saved patrol data. Are you sure you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            // Warn them that this will overwrite the current saved data.
+            DialogResult result = MessageBox.Show("This will overwrite the current saved patrol data. Are you sure you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (result == DialogResult.Yes)
-                {
-                    // Clear the start and end dates
-                    startDate = DateTime.MinValue;
-                    endDate = DateTime.MinValue;
-                }
-                else
-                {
-                    // Do nothing.
-                    return;
-                }
+            if (result == DialogResult.Yes)
+            {
+                // Clear the start and end dates
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+
+                // Clear the labels
+                currPatrolTime.Text = "Current Patrol Time: 00:00:00";
+                startDateLabel.Text = "Patrol Start Time/Date: ";
+                endDateLabel.Text = "End Time/Date: ";
             }
+            else
+            {
+                // Do nothing.
+                return;
+            }
+
+            // Disable all of the save buttons
+            exitWithoutSaving.Enabled = false;
+            SaveAndFill.Enabled = false;
+            saveToFile.Enabled = false;
+
+            // Disable check boxes
+            enableRideAlongSettings.Enabled = false;
+            dryRunBox.Enabled = false;
+
+            // Disable opts
+            serverChooserBox.Enabled = false;
+            startAndPause.Enabled = false;
+
+            // Enable the stop button
+            stopPatrol.Enabled = true;
 
             // Set the start date
             startDate = DateTime.Now;
@@ -164,6 +182,22 @@ namespace EasyPatrol
                 currentStatus.ForeColor = System.Drawing.Color.Blue;
 
                 startAndPause.Enabled = true;
+
+                // Enable all of the save buttons
+                exitWithoutSaving.Enabled = true;
+                SaveAndFill.Enabled = true;
+                saveToFile.Enabled = true;
+
+                // Enable check boxes
+                enableRideAlongSettings.Enabled = true;
+                dryRunBox.Enabled = true;
+
+                // Enable opts
+                serverChooserBox.Enabled = true;
+                startAndPause.Enabled = true;
+
+                // Disable the stop button
+                stopPatrol.Enabled = false;
             }
         }
 
@@ -201,8 +235,20 @@ namespace EasyPatrol
             json.Add("1012UnitWebID", unitRideAlongWebID.Text != null ? unitRideAlongWebID.Text : "");
 
             // Create the file in the current dir with the naming format:
-            // patrolData
-            
+            // patrolData-{start_date}_{end_date}.json
+            string fileName = "patrolData-" + startDate.ToString("yyyy-MM-dd") + "-" + endDate.ToString("yyyy-MM-dd") + ".json";
+
+            // Write the JSON to the file
+            System.IO.File.WriteAllText(fileName, json.ToString());
+
+            // Inform the user that the file has been saved
+            MessageBox.Show("The patrol data has been saved to " + fileName + " In the current directory.", "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void SaveAndFill_Click(object sender, EventArgs e)
+        {
+            // Show message box saying this is WIP
+            MessageBox.Show("Due to the way google forms works, I'm going to need some time to work with CoC of deparments to get forms connected to here. Stay tuned.", "Work In Progress", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

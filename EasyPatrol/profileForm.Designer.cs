@@ -157,6 +157,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "profileForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Current Profile";
             this.Shown += new System.EventHandler(this.profileForm_Shown);
             this.ResumeLayout(false);

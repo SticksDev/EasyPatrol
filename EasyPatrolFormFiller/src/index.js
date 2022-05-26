@@ -22,13 +22,8 @@ if(!options.config || !options.dept) {
 
 try {
     const config = JSON.parse(fs.readFileSync(options.config));
-    const department = config.departments[options.dept];
-    if(!department) {
-        console.log(chalk.red('[ERROR]:') + ' Department not found in config file');
-        process.exit(1);
-    }
-    const form = require('./src/' + department.form);
-    form.fill(department);
+    const form = require('./forms/' + options.dept.toLowerCase() + '.js');
+    form.fill(config);
 } catch (e) {
     console.log(chalk.red('[ERROR]:') + ' Encountered an error while running the filling process');
     console.log(chalk.red('[NodeRuntimeException]:') + ' ' + e.message);

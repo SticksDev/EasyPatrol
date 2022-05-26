@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(patrolWindow));
             this.currPatrolTime = new System.Windows.Forms.Label();
             this.serverLabel = new System.Windows.Forms.Label();
             this.upperClock = new System.Windows.Forms.Label();
@@ -54,7 +55,7 @@
             this.unitRideAlongIdent = new System.Windows.Forms.TextBox();
             this.rideAlongUnitText = new System.Windows.Forms.Label();
             this.rideAlongUnitIdentText = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.dryRunBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // currPatrolTime
@@ -115,6 +116,7 @@
             this.SaveAndFill.TabIndex = 5;
             this.SaveAndFill.Text = "Save and Fill Log";
             this.SaveAndFill.UseVisualStyleBackColor = true;
+            this.SaveAndFill.Click += new System.EventHandler(this.SaveAndFill_Click);
             // 
             // label4
             // 
@@ -231,6 +233,7 @@
             // 
             // stopPatrol
             // 
+            this.stopPatrol.Enabled = false;
             this.stopPatrol.Location = new System.Drawing.Point(626, 88);
             this.stopPatrol.Name = "stopPatrol";
             this.stopPatrol.Size = new System.Drawing.Size(147, 48);
@@ -315,22 +318,22 @@
             this.rideAlongUnitIdentText.Text = "10-12 Unit Name + No. (E.g Tanner S. 2L-403)";
             this.rideAlongUnitIdentText.Visible = false;
             // 
-            // checkBox2
+            // dryRunBox
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(485, 269);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(157, 17);
-            this.checkBox2.TabIndex = 26;
-            this.checkBox2.Text = "Dry Run (Don\'t click submit)";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.dryRunBox.AutoSize = true;
+            this.dryRunBox.Location = new System.Drawing.Point(485, 269);
+            this.dryRunBox.Name = "dryRunBox";
+            this.dryRunBox.Size = new System.Drawing.Size(157, 17);
+            this.dryRunBox.TabIndex = 26;
+            this.dryRunBox.Text = "Dry Run (Don\'t click submit)";
+            this.dryRunBox.UseVisualStyleBackColor = true;
             // 
             // patrolWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.dryRunBox);
             this.Controls.Add(this.rideAlongUnitIdentText);
             this.Controls.Add(this.rideAlongUnitText);
             this.Controls.Add(this.unitRideAlongIdent);
@@ -357,7 +360,9 @@
             this.Controls.Add(this.upperClock);
             this.Controls.Add(this.serverLabel);
             this.Controls.Add(this.currPatrolTime);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "patrolWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EasyPatrol - Patrol";
             this.Shown += new System.EventHandler(this.patrolWindow_Shown);
             this.ResumeLayout(false);
@@ -393,6 +398,6 @@
         private System.Windows.Forms.TextBox unitRideAlongIdent;
         private System.Windows.Forms.Label rideAlongUnitText;
         private System.Windows.Forms.Label rideAlongUnitIdentText;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox dryRunBox;
     }
 }

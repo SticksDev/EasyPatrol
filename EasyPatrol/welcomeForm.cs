@@ -37,7 +37,7 @@ namespace EasyPatrol
             patrold.initialize();
 
             // Check for updates
-            AutoUpdater.Start("https://vps1.sticks.ovh/VersionInfo.xml");
+            AutoUpdater.Start("https://vps1.sticks.ovh/versioninfo.xml");
         }
 
         private void startProcessChecker()
@@ -56,7 +56,7 @@ namespace EasyPatrol
                 {
                     // Check if process is running
                     if (Process.GetProcessesByName("fivem").Length > 0)
-                    { 
+                    {
                         // Process is running
                         fiveMState.Text = "FiveM Status: Running";
                         fiveMState.ForeColor = Color.Green;
@@ -122,7 +122,8 @@ namespace EasyPatrol
                 isDefaultProfile = false;
             }
 
-            if (e.isNewProfile | isDefaultProfile) { 
+            if (e.isNewProfile | isDefaultProfile)
+            {
                 // Show messageBox saying that its a new profile and needs to be configured
                 // MsgBox should be type warning
                 MessageBox.Show("New Profile Detected or Default Profile Detected. Please ensure you add your details in before starting patrol.", "New Profile Detected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -133,7 +134,9 @@ namespace EasyPatrol
                 profileState.ForeColor = Color.Red;
 
                 isDefaultProfile = true;
-            } else {
+            }
+            else
+            {
                 // Set the profileState to ready
                 // Text: Profile Status: (COLOR GREEN) Ready
                 profileState.Text = "Profile Status: Ready";
@@ -187,7 +190,7 @@ namespace EasyPatrol
             // Check if there profile has been marked as default
             // If not, show messagebox saying that the profile needs to be configured
 
-            if(isDefaultProfile)
+            if (isDefaultProfile)
             {
                 MessageBox.Show("Please ensure you have configured your profile before starting patrol.", "Profile Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -207,8 +210,8 @@ namespace EasyPatrol
 
                 // Check if the user selected no
                 // If not, contiune.
-               
-                if(result == DialogResult.No)
+
+                if (result == DialogResult.No)
                 {
                     return;
                 }
@@ -234,7 +237,7 @@ namespace EasyPatrol
             // Disable the editProfile button and start patrol button
             editProfileBttn.Enabled = false;
             startPatrolBttn.Enabled = false;
-            
+
             // On profile edit
             profileForm.profileEdited += profileForm_profileEdited;
 
