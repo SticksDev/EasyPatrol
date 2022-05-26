@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace EasyPatrol
         private DateTime endDate;
         private Profile profile;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string waitTime;
 
         // Create a stopwatch in the HH:MM:SS format
         private System.Timers.Timer patrolTimer = new System.Timers.Timer();
@@ -126,6 +128,21 @@ namespace EasyPatrol
                 }
             }
 
+            if(waitTime != null)
+            {
+                int waitInt = Convert.ToInt32(waitTime);
+                // Sleep for x amount of sec
+                // Check if over 1 minute
+                if (waitInt > 60)
+                {
+                    // Error
+                    MessageBox.Show("Wait time must be less than 60 seconds.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                System.Threading.Thread.Sleep(waitInt);
+            }
+
             // Set the start date
             startDate = DateTime.Now;
 
@@ -141,6 +158,18 @@ namespace EasyPatrol
 
             // Start the patrol
             patrolTimer.Start();
+
+            // Once timer is started, create Notfiaction
+            // Create a new notification
+            NotifyIcon notifyIcon = new NotifyIcon();
+            notifyIcon.Icon = System.Drawing.SystemIcons.Information;
+            notifyIcon.Visible = true;
+            notifyIcon.BalloonTipTitle = "EasyPatrol";
+            notifyIcon.BalloonTipText = "Patrol Started";
+            notifyIcon.ShowBalloonTip(1000);
+
+            // Create a new thread to run the patrol
+            
         }
 
         private void stopPatrol_Click(object sender, EventArgs e)
@@ -155,7 +184,7 @@ namespace EasyPatrol
 
                 // Update the end date
                 endDate = DateTime.Now;
-
+                
                 // Update the end date label
                 endDateLabel.Text = "Patrol End Time/Date: " + endDate.ToString("g");
 
@@ -173,36 +202,72 @@ namespace EasyPatrol
             serverLabel.Text = "Current Selected Server: " + serverChooserBox.SelectedItem.ToString();
         }
 
+        private void startDelay_TextChanged(object sender, EventArgs e)
+        {
+            waitTime = startDelay.Text;
+        }
+
         private void exitWithoutSaving_Click(object sender, EventArgs e)
         {
-            // Confirm with messageBox
-            DialogResult result = MessageBox.Show("Are you sure you want to exit without saving?", "Exit Without Saving", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            // Confirm that the user wants to exit without saving.
+            DialogResult result = MessageBox.Show("Are you sure you want to exit without saving?\nThis will also quit the application.", "Exit Without Saving", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (result == DialogResult.Yes)
             {
-                // Exit the program
-                this.Close();
+                // Exit without saving
+                Application.Exit();
             }
         }
 
         private void saveToFile_Click(object sender, EventArgs e)
         {
-            // Create new JSON object
+            // Construt JSON object
             JObject json = new JObject();
-
-            // Fill data
-            json.Add("PatrolStartTime", startDate.ToString("g"));
-            json.Add("PatrolEndTime", endDate.ToString("g"));
-            json.Add("PatrolTime", (endDate - startDate).ToString());
-
-            // 10-12 Related Data
-            json.Add("wasIn1012", enableRideAlongSettings.Checked);
-            json.Add("1012UnitIdent", unitRideAlongIdent.Text != null ? unitRideAlongIdent.Text : "");
-            json.Add("1012UnitWebID", unitRideAlongWebID.Text != null ? unitRideAlongWebID.Text : "");
-
-            // Create the file in the current dir with the naming format:
-            // patrolData
             
+            // Add data
+            json.Add("startDate", startDate.ToString("g"));
+            json.Add("endDate", endDate.ToString("g"));
+            json.Add("server", serverChooserBox.SelectedItem.ToString());
+            json.Add("rideAlong", enableRideAlongSettings.Checked);
+            json.Add("rideAlongUnit", unitRideAlongIdent.Text != "" ? unitRideAlongIdent.Text : null);
+            json.Add("rideAlongWebID", unitRideAlongWebID.Text != "" ? unitRideAlongWebID.Text : null);
+
+            // Finally set the totalPatrolTime in the json file
+            json.Add("totalPatrolTime", (endDate - startDate).TotalHours + "h" + " " + (endDate - startDate).TotalMinutes + "m" + " " + (endDate - startDate).TotalSeconds + "s");
+
+            // Write the JSON object to a file in the current directory named "patrolData-DATE.json"
+            string fileName = "patrolData-" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".json";
+
+            // Write the JSON object to a file
+            using (StreamWriter file = File.CreateText(fileName))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, json);
+            }
+
+            // Show a message box to the user
+            MessageBox.Show("Patrol data saved to file: " + fileName, "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void quitApp_Click(object sender, EventArgs e)
+        {
+            // Confirm quit
+            DialogResult result = MessageBox.Show("Are you sure you want to quit?", "Quit", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                // Exit the application
+                Application.Exit();
+            }
+        }
+
+        private void returnToMenu_Click(object sender, EventArgs e)
+        {
+            // Close current form
+            this.Close();
+
+            // Go back to the main menu
+            new welcomeScreen().Show();
         }
     }
 }

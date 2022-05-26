@@ -33,7 +33,7 @@
             this.upperClock = new System.Windows.Forms.Label();
             this.exitWithoutSaving = new System.Windows.Forms.Button();
             this.saveToFile = new System.Windows.Forms.Button();
-            this.SaveAndFill = new System.Windows.Forms.Button();
+            this.SaveAndFillLog = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.currentIdent = new System.Windows.Forms.Label();
@@ -55,6 +55,7 @@
             this.rideAlongUnitText = new System.Windows.Forms.Label();
             this.rideAlongUnitIdentText = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.quitApp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // currPatrolTime
@@ -89,7 +90,7 @@
             // 
             // exitWithoutSaving
             // 
-            this.exitWithoutSaving.Location = new System.Drawing.Point(370, 400);
+            this.exitWithoutSaving.Location = new System.Drawing.Point(379, 400);
             this.exitWithoutSaving.Name = "exitWithoutSaving";
             this.exitWithoutSaving.Size = new System.Drawing.Size(128, 38);
             this.exitWithoutSaving.TabIndex = 3;
@@ -107,14 +108,14 @@
             this.saveToFile.UseVisualStyleBackColor = true;
             this.saveToFile.Click += new System.EventHandler(this.saveToFile_Click);
             // 
-            // SaveAndFill
+            // SaveAndFillLog
             // 
-            this.SaveAndFill.Location = new System.Drawing.Point(513, 400);
-            this.SaveAndFill.Name = "SaveAndFill";
-            this.SaveAndFill.Size = new System.Drawing.Size(128, 38);
-            this.SaveAndFill.TabIndex = 5;
-            this.SaveAndFill.Text = "Save and Fill Log";
-            this.SaveAndFill.UseVisualStyleBackColor = true;
+            this.SaveAndFillLog.Location = new System.Drawing.Point(513, 400);
+            this.SaveAndFillLog.Name = "SaveAndFillLog";
+            this.SaveAndFillLog.Size = new System.Drawing.Size(128, 38);
+            this.SaveAndFillLog.TabIndex = 5;
+            this.SaveAndFillLog.Text = "Save and Fill Log";
+            this.SaveAndFillLog.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -245,6 +246,7 @@
             this.startDelay.Name = "startDelay";
             this.startDelay.Size = new System.Drawing.Size(181, 20);
             this.startDelay.TabIndex = 18;
+            this.startDelay.TextChanged += new System.EventHandler(this.startDelay_TextChanged);
             // 
             // label13
             // 
@@ -252,9 +254,9 @@
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(576, 167);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(80, 18);
+            this.label13.Size = new System.Drawing.Size(153, 18);
             this.label13.TabIndex = 19;
-            this.label13.Text = "Start Delay";
+            this.label13.Text = "Start Delay (Seconds)";
             // 
             // label14
             // 
@@ -325,11 +327,22 @@
             this.checkBox2.Text = "Dry Run (Don\'t click submit)";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
+            // quitApp
+            // 
+            this.quitApp.Location = new System.Drawing.Point(16, 9);
+            this.quitApp.Name = "quitApp";
+            this.quitApp.Size = new System.Drawing.Size(68, 21);
+            this.quitApp.TabIndex = 27;
+            this.quitApp.Text = "Quit";
+            this.quitApp.UseVisualStyleBackColor = true;
+            this.quitApp.Click += new System.EventHandler(this.quitApp_Click);
+            // 
             // patrolWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.quitApp);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.rideAlongUnitIdentText);
             this.Controls.Add(this.rideAlongUnitText);
@@ -351,7 +364,7 @@
             this.Controls.Add(this.currentIdent);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.SaveAndFill);
+            this.Controls.Add(this.SaveAndFillLog);
             this.Controls.Add(this.saveToFile);
             this.Controls.Add(this.exitWithoutSaving);
             this.Controls.Add(this.upperClock);
@@ -372,7 +385,7 @@
         private System.Windows.Forms.Label upperClock;
         private System.Windows.Forms.Button exitWithoutSaving;
         private System.Windows.Forms.Button saveToFile;
-        private System.Windows.Forms.Button SaveAndFill;
+        private System.Windows.Forms.Button SaveAndFillLog;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label currentIdent;
@@ -394,5 +407,6 @@
         private System.Windows.Forms.Label rideAlongUnitText;
         private System.Windows.Forms.Label rideAlongUnitIdentText;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Button quitApp;
     }
 }

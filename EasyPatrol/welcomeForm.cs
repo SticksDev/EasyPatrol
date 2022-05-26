@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoUpdaterDotNET;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -34,6 +35,9 @@ namespace EasyPatrol
 
             // Init patrold
             patrold.initialize();
+
+            // Check for updates
+            AutoUpdater.Start("https://vps1.sticks.ovh/VersionInfo.xml");
         }
 
         private void startProcessChecker()
@@ -50,7 +54,6 @@ namespace EasyPatrol
 
             timer.Tick += (sender, e) =>
                 {
-                    log.Debug(tsclient);
                     // Check if process is running
                     if (Process.GetProcessesByName("fivem").Length > 0)
                     { 
@@ -175,7 +178,7 @@ namespace EasyPatrol
             }
 
             // Start the process checker
-            // startProcessChecker();
+            startProcessChecker();
 
         }
 
@@ -211,7 +214,13 @@ namespace EasyPatrol
                 }
             }
 
-            
+            // Open patrol form
+            patrolWindow patrolForm = new patrolWindow();
+
+            this.Hide();
+
+            patrolForm.Closed += (s, args) => Application.Exit();
+            patrolForm.Show();
         }
 
         private void editProfileBttn_Click(object sender, EventArgs e)
