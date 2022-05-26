@@ -16,7 +16,7 @@ namespace EasyPatrol
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new welcomeScreen());
+            Application.Run(new splash());
         }
     }
 }

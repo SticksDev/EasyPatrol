@@ -57,17 +57,12 @@ namespace EasyPatrol
                         // Process is running
                         fiveMState.Text = "FiveM Status: Running";
                         fiveMState.ForeColor = Color.Green;
-
-
-                        log.Debug("FiveM is running");
                     }
                     else
                     {
                         // Process is not running
                         fiveMState.Text = "FiveM Status: Not running";
                         fiveMState.ForeColor = Color.Red;
-
-                        log.Debug("FiveM is not running");
                     }
 
                     if (Process.GetProcessesByName(tsclient).Length > 0)
@@ -75,17 +70,12 @@ namespace EasyPatrol
                         // Process is running
                         tsState.Text = "TeamSpeak 3 Status: Running";
                         tsState.ForeColor = Color.Green;
-
-                        log.Debug("TeamSpeak 3.exe is running");
                     }
                     else
                     {
 
                         tsState.Text = "TeamSpeak 3 Status: Not running";
                         tsState.ForeColor = Color.Red;
-
-                        // Process is not running
-                        log.Debug("TeamSpeak 3.exe is not running");
                     }
                 };
 
@@ -196,9 +186,32 @@ namespace EasyPatrol
 
             if(isDefaultProfile)
             {
-                // Show messagebox saying that the profile needs to be configured
                 MessageBox.Show("Please ensure you have configured your profile before starting patrol.", "Profile Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
+
+            // Check if fiveM.exe and TeamSpeak 3 process is running
+
+            Process[] fiveMProcesses = Process.GetProcessesByName("fivem");
+            Process[] ts3Processes = Process.GetProcessesByName(tsclient);
+
+            if (ts3Processes.Length == 0 | fiveMProcesses.Length == 0)
+            {
+                // Show messagebox saying that the process is not running
+                // Ask if they want to contiune anyway
+                // MsgBox should be type warning
+                DialogResult result = MessageBox.Show("TeamSpeak 3 and/or FiveM is not running. Would you like to start patrol anyways?", "TeamSpeak 3 and/or FiveM Not Running", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                // Check if the user selected no
+                // If not, contiune.
+               
+                if(result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            
         }
 
         private void editProfileBttn_Click(object sender, EventArgs e)

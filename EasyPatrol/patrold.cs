@@ -65,25 +65,9 @@ namespace EasyPatrol
             patroldReady?.Invoke(this, new patroldReadyEventArgs() { isReady = true, isNewProfile = isNewProfile, profile = profile });
         }
 
-        public object getCurrentProfile()
+        public void startFillerProcess(string department, object patroldata)
         {
-            // Get the current profile and return it
-            return profile;
+            
         }
-
-        public void editCurrentProfile(object profile)
-        {
-            // Convert the object to a profile
-            Profile newProfile = (Profile)profile;
-
-            // First, delete the old profile
-            System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json");
-
-            // Then, write the new profile to the file
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json", JsonConvert.SerializeObject(newProfile));
-
-            // Finally, load the new profile
-            this.profile = JsonConvert.DeserializeObject<Profile>(System.IO.File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\EasyPatrol\\profile.json"));
-        }
-    }
+   }
 }
