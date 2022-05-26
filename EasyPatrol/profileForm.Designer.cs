@@ -117,7 +117,7 @@
             // 
             // departmentPicker
             // 
-            this.departmentPicker.ForeColor = System.Drawing.SystemColors.ActiveBorder;
+            this.departmentPicker.ForeColor = System.Drawing.SystemColors.WindowText;
             this.departmentPicker.FormattingEnabled = true;
             this.departmentPicker.Items.AddRange(new object[] {
             "LSPD",
