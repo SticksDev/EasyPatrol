@@ -234,12 +234,31 @@ namespace EasyPatrol
             json.Add("1012UnitIdent", unitRideAlongIdent.Text != null ? unitRideAlongIdent.Text : "");
             json.Add("1012UnitWebID", unitRideAlongWebID.Text != null ? unitRideAlongWebID.Text : "");
 
+           
+
             // Create the file in the current dir with the naming format:
             // patrolData-{start_date}_{end_date}.json
             string fileName = "patrolData-" + startDate.ToString("yyyy-MM-dd") + "-" + endDate.ToString("yyyy-MM-dd") + ".json";
 
             // Write the JSON to the file
             System.IO.File.WriteAllText(fileName, json.ToString());
+
+            // Ask if they want a human readable version (.txt)
+            DialogResult result = MessageBox.Show("Would you like to save a human readable version of the data? in a text file?", "Save Human Readable", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            // If yes, create the file
+            if (result == DialogResult.Yes)
+            {
+                // Create the file in the current dir with the naming format:
+                // patrolData-{start_date}_{end_date}.txt
+                string fileName2 = "patrolData-" + startDate.ToString("yyyy-MM-dd") + "-" + endDate.ToString("yyyy-MM-dd") + ".txt";
+
+                // Create a human readable version of the JSON
+                string humanReadable = json.ToString(Formatting.Indented);
+
+                // Write the human readable version to the file
+                System.IO.File.WriteAllText(fileName2, humanReadable);
+            }
 
             // Inform the user that the file has been saved
             MessageBox.Show("The patrol data has been saved to " + fileName + " In the current directory.", "File Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);

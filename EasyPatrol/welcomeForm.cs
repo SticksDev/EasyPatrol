@@ -37,6 +37,9 @@ namespace EasyPatrol
             patrold.initialize();
 
             // Check for updates
+            AutoUpdater.Mandatory = true;
+            AutoUpdater.UpdateMode = Mode.Forced;
+            
             AutoUpdater.Start("https://vps1.sticks.ovh/versioninfo.xml");
         }
 
