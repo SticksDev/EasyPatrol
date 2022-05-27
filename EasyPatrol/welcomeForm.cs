@@ -39,7 +39,10 @@ namespace EasyPatrol
             // Check for updates
             AutoUpdater.Mandatory = true;
             AutoUpdater.UpdateMode = Mode.Forced;
-            
+
+            // Notify of all actions 
+            AutoUpdater.ReportErrors = true;
+
             AutoUpdater.Start("https://vps1.sticks.ovh/versioninfo.xml");
         }
 
